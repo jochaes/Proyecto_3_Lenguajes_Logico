@@ -1,3 +1,17 @@
+'''
+Instituto Tecnologico de Costa Rica
+Escuela de Ingenieria en Computacion
+Curso: Lenguages de Programacion
+
+Programa: Conexión con Prolog
+Lenguaje: Python
+Profesor: Oscar Viquez Acuña 
+
+Estudiante: Josue Chaves Araya - 2015094068
+
+I Semestre 2023
+'''
+
 # Tuve varios errores con la libreria pyswip 
 # Acá nos dicen cómo arreglaro: https://swi-prolog.discourse.group/t/how-to-brew-install-swi-prolog-8-4-3-when-9-0-0-is-out/5973/4
 #instalar pyswip con el siguiente comando: python3 -m pip install git+https://github.com/yuce/pyswip@master#egg=pyswip

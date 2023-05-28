@@ -96,14 +96,14 @@ def prologFactsGenerator(matrix, n):
 
 
 # # Ejemplo de uso
-tamano = 5
-palabras = ['HOLA', 'MUNDO', 'PALA']
-sopa = generar_sopa_letras(tamano, palabras)
+# tamano = 5
+# palabras = ['HOLA', 'MUNDO', 'PALA']
+# sopa = generar_sopa_letras(tamano, palabras)
 
-# Imprimir la sopa de letras generada
-for fila in sopa:
-    print(' '.join(fila))
+# # Imprimir la sopa de letras generada
+# for fila in sopa:
+#     print(' '.join(fila))
 
-facts = prologFactsGenerator(sopa, tamano)
-for fact in facts:
-    print(fact)
+# facts = prologFactsGenerator(sopa, tamano)
+# for fact in facts:
+#     print(fact)
