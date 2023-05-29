@@ -39,9 +39,18 @@ def loadGameFrame():
         matrix = generar_sopa_letras(MATRIX_SIZE, listWords)
 
         #Cargar la matriz en el frame
+        print ("\nCargando matriz en el frame")
         pintar_matriz(matrix, leftGameFrame)
+
+        #Generar el conocimiento de prolog
+        print ("\nGenerando conocimiento de prolog")
+        conocimiento = prologFactsGenerator(matrix, MATRIX_SIZE)
         
+        #Guardar el conocimiento en un archivo
+        print ("\nGuardando conocimiento en archivo .pl")
+        storeKnowledge(conocimiento, "./Prolog/Matrix.pl")
         
+        gameListbox.delete(0, tk.END)
         for palabra in listWords:
             gameListbox.insert(tk.END, palabra)
         
@@ -85,8 +94,6 @@ def showMessage(title, message):
     
 
 ################################## Start Frame ##################################
-
-
 
 def addWordListBox(self, event=None):
     global lbIndex
@@ -176,6 +183,12 @@ button_a.pack(padx=10, pady=5)
 
 
 ################################## Game Frame ##################################
+################################## Game Frame ##################################
+################################## Game Frame ##################################
+################################## Game Frame ##################################
+################################## Game Frame ##################################
+
+
 
 gameFrame = tk.Frame(window, bg="lightblue")
 gameFrame.pack(expand=True, fill=tk.BOTH)
@@ -213,7 +226,40 @@ gameListScroll.config(command=listbox.yview)
 gameListScroll.pack(side=tk.RIGHT, fill=tk.Y) 
 gameListbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True) 
 
-solve_btn = tk.Button(rightGameFrame, text="Solucionar", command=loadStartFrame)
+
+def cambiarColor(contenedor, resultados):
+    
+    #Si solo hay un camino lo pinta de verde, 
+    #si hay mas de uno lo pinta de fucsia
+    if len(resultados) == 1:
+        color = "green"
+    else:
+        color = "purple"
+
+    for posiciones in resultados:
+        
+        for posicion in posiciones:
+
+            x = posicion[0]
+            y = posicion[1]
+            etiqueta = contenedor.grid_slaves(row=x, column=y)[0]
+            etiqueta.config(bg=color)
+
+   
+    
+
+
+def solucion():
+    print ("\nBuscando palabras en la matriz de letras")
+    for palabra in listWords:
+        print(palabra)
+        resultado = wordPath(palabra)
+        cambiarColor(leftGameFrame, resultado)
+        print(resultado)
+        print("\n")
+
+
+solve_btn = tk.Button(rightGameFrame, text="Solucionar", command=solucion)
 solve_btn.pack(expand=False, fill=tk.BOTH, side=tk.BOTTOM, anchor=tk.S)
 
 def pintar_matriz(matriz, contenedor):
@@ -230,9 +276,7 @@ def pintar_matriz(matriz, contenedor):
             etiqueta = tk.Label(contenedor, text=str(elemento),padx=padx, pady=pady, bg="white", fg="black", border=1, relief="solid")
             etiqueta.grid(row=i, column=j, columnspan=1, rowspan=1, sticky="nsew")
 
-def cambiarColor(contenedor,x,y,color):
-    etiqueta = contenedor.grid_slaves(row=x, column=y)[0]
-    etiqueta.config(bg=color)
+
 
 '''
 #Generación de la Matriz de Letras
