@@ -93,10 +93,13 @@ def generarHechosProlog(matrix, n):
     return facts
 
 
-# # Ejemplo de uso
-# tamano = 5
-# palabras = ['HOLA', 'MUNDO', 'PALA']
-# sopa = generar_sopa_letras(tamano, palabras)
+# Ejemplo de uso
+tamano = 12
+palabras = ['HOLA', 'MUNDO', 'PALA', 'PROLOG', 'TIENDA', 'JUEGO', 'PALABRA', 'CASA', 'PERRO','COCINA']
+sopa = generar_sopa_letras(tamano, palabras)
+
+print(sopa)
+
 
 # # Imprimir la sopa de letras generada
 # for fila in sopa:
