@@ -28,9 +28,9 @@ findWord_Aux(Word,[Start|Path]) :-
 
 findWord_Matrix([], _, []).  
 findWord_Matrix([Letter|Left], LastPosition, [Position|LeftPositions]) :-
-    location(Letter, Row, Column),                                         %Obtiene la posicion de la letra en la matriz
-    adjacent(LastPosition, [Row, Column]),                               % Verifica si la posicion actual es adyacente a la posicion anterior
-    Position = (Row, Column),                                             % Crea una tupla con la posicion
+    location(Letter, Row, Column),                                          %Obtiene la posicion de la letra en la matriz
+    adjacent(LastPosition, [Row, Column]),                                  % Verifica si la posicion actual es adyacente a la posicion anterior
+    Position = (Row, Column),                                               % Crea una tupla con la posicion
     findWord_Matrix(Left, [Row, Column], LeftPositions).
 
 % Predicado para verificar si dos posiciones son adyacentes

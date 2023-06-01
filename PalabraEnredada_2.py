@@ -23,7 +23,7 @@ emptyMatrix = [['0' for _ in range(MATRIX_SIZE)] for _ in range(MATRIX_SIZE)] #M
 #*******-Panatalla Principal
 window = tk.Tk()
 window.title("Palabra Enredada")
-window.geometry("854x500")
+window.geometry("854x510")
 # window.resizable(False, False)
 # window.maxsize(1024, 768)
 # window.minsize(900, 675)
@@ -100,7 +100,7 @@ def seleccionarArchivo():
 
     filename = fd.askopenfilename(
         title='Open a file',
-        initialdir='/',
+        initialdir='./',
         filetypes=filetypes)
     
     return filename
@@ -162,51 +162,14 @@ def cargarPalabras():
 
 ################################## Game Frame ##################################
 
-#*******- Pantalla del Juego
 
-gameFrame = tk.Frame(window, bg="lightblue")
-gameFrame.pack(expand=True, fill=tk.BOTH)
-
-
-#Frame superior 
-topGameFrame = tk.Frame(gameFrame, bg="brown")
-topGameFrame.pack(fill=tk.X, side=tk.TOP, anchor=tk.N)
-
-gameTitle3_Label = tk.Label(topGameFrame, text="Bienvenido a Palabra Enredada", font=("Arial", 20),bg="white", fg="black")
-gameTitle3_Label.pack(expand=True, fill=tk.Y, side=tk.RIGHT, anchor=tk.N)
-
-goBack_btn = tk.Button(topGameFrame, text="Cargar Matriz", command=cargarMatriz)
-goBack_btn.pack(expand=True, fill=tk.Y, side=tk.LEFT, anchor=tk.N)
-
-goBack_btn = tk.Button(topGameFrame, text="Cargar Palabras", command=cargarPalabras)
-goBack_btn.pack(expand=True, fill=tk.Y, side=tk.LEFT, anchor=tk.N)
-
-#Frame inferior
-bottomGameFrame = tk.Frame(gameFrame, bg="green")
-bottomGameFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, anchor=tk.N)
-
-#Frame izquierdo
-leftGameFrame = tk.Frame(bottomGameFrame, bg="yellow")
-leftGameFrame.pack(expand=False, fill=tk.BOTH, side=tk.LEFT, anchor=tk.N, padx=10, pady=10)
-
-#Frame derecho
-rightGameFrame = tk.Frame(bottomGameFrame, bg="pink")
-rightGameFrame.pack(expand=True, fill=tk.BOTH, side=tk.RIGHT, anchor=tk.N,padx=10, pady=10)
-
-#ListBox para mostrar las palabras ingresadas
-gameListFrame = tk.Frame(rightGameFrame, bg="white")
-gameListFrame.pack(fill=tk.BOTH, expand=True)
-gameListScroll = tk.Scrollbar(gameListFrame, orient=tk.VERTICAL)
-gameListbox = tk.Listbox(gameListFrame, width=1, yscrollcommand=gameListScroll.set, bg="white", fg="black")
-gameListScroll.config(command=gameListbox.yview)
-gameListScroll.pack(side=tk.RIGHT, fill=tk.Y) 
-gameListbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True) 
-
-
-#Funcion para cambiar el color de las etiquetas
-#Muestra la soucion en pantalla de las palabras encontradas por prolog
-#Pinta en Verde las palabras que sólo se encontraron una vez
-#Pinta en Fucsia las palabras que tienen más de una ruta 
+#*******- Funciones del Juego
+'''
+    Funcion para cambiar el color de las etiquetas
+    Muestra la soucion en pantalla de las palabras encontradas por prolog
+    Pinta en Verde las palabras que sólo se encontraron una vez
+    Pinta en Fucsia las palabras que tienen más de una ruta 
+'''
 def cambiarColor(contenedor, resultados):
     
     #Si solo hay un camino lo pinta de verde, 
@@ -223,7 +186,8 @@ def cambiarColor(contenedor, resultados):
             x = posicion[0]
             y = posicion[1]
             etiqueta = contenedor.grid_slaves(row=x, column=y)[0]
-            etiqueta.config(bg=color)
+            etiqueta.config(bg=color, fg="white")
+            
 
 #Funcion para consultar las palabras en prolog
 def solucion():
@@ -240,9 +204,7 @@ def solucion():
     else:
         mostrarMensaje("Error", "No se ha cargado la matriz o las palabras")
 
-#Boton para encontrar las palabras con prolos 
-solve_btn = tk.Button(rightGameFrame, text="Solucionar", command=solucion)
-solve_btn.pack(expand=False, fill=tk.BOTH, side=tk.BOTTOM, anchor=tk.S)
+
 
 #Dibuja la matriz generada por python 
 def pintar_matriz(matriz, contenedor):
@@ -260,9 +222,53 @@ def pintar_matriz(matriz, contenedor):
 
     for i, fila in enumerate(matriz):
         for j, elemento in enumerate(fila):
-            etiqueta = tk.Label(contenedor, text=str(elemento),padx=padx, pady=pady, bg="white", fg="black", border=1, relief="solid")
+            etiqueta = tk.Label(contenedor, text=str(elemento),padx=padx, pady=pady, bg="#DAF7DC", fg="black", border=1, relief="solid")
             etiqueta.grid(row=i, column=j, columnspan=1, rowspan=1, sticky="nsew")
 
+
+
+#*******- Pantalla del Juego
+
+gameFrame = tk.Frame(window, bg='#2F4858')
+gameFrame.pack(expand=True, fill=tk.BOTH)
+
+#Frame superior 
+topGameFrame = tk.Frame(gameFrame, bg='#336699')
+topGameFrame.pack(fill=tk.X, side=tk.TOP, anchor=tk.N, ipadx=2, ipady=2)
+
+gameTitle3_Label = tk.Label(topGameFrame, text="Bienvenido a Palabra Enredada", font=("Arial", 20),bg="#336699", fg="#86BBD8")
+gameTitle3_Label.pack(expand=True, fill=tk.Y, side=tk.LEFT, anchor=tk.N)
+
+loadMatrixBtn = tk.Button(topGameFrame, text="Cargar Palabras", command=cargarPalabras, bg="#9EE493", fg="#2F4858" )
+loadMatrixBtn.pack(expand=True, fill=tk.Y, side=tk.RIGHT, anchor=tk.N)
+
+loadWordsBtn = tk.Button(topGameFrame, text="Cargar Matriz", command=cargarMatriz,bg="#9EE493", fg="#2F4858")
+loadWordsBtn.pack(expand=True, fill=tk.Y, side=tk.RIGHT, anchor=tk.N)
+
+#Frame inferior
+bottomGameFrame = tk.Frame(gameFrame, bg="#2F4858")
+bottomGameFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, anchor=tk.N)
+
+#Frame izquierdo
+leftGameFrame = tk.Frame(bottomGameFrame, bg="#2F4858")
+leftGameFrame.pack(expand=False, fill=tk.BOTH, side=tk.LEFT, anchor=tk.N, padx=10, pady=10)
+
+#Frame derecho
+rightGameFrame = tk.Frame(bottomGameFrame, bg="#2F4858")
+rightGameFrame.pack(expand=True, fill=tk.BOTH, side=tk.RIGHT, anchor=tk.N,padx=10, pady=10)
+
+#ListBox para mostrar las palabras ingresadas
+gameListFrame = tk.Frame(rightGameFrame, bg="white")
+gameListFrame.pack(fill=tk.BOTH, expand=True)
+gameListScroll = tk.Scrollbar(gameListFrame, orient=tk.VERTICAL)
+gameListbox = tk.Listbox(gameListFrame, width=1, yscrollcommand=gameListScroll.set, bg="#DAF7DC", fg="black", font=("Arial", 16, "bold"))
+gameListScroll.config(command=gameListbox.yview)
+gameListScroll.pack(side=tk.RIGHT, fill=tk.Y) 
+gameListbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True) 
+
+#Boton para encontrar las palabras con prolos 
+solve_btn = tk.Button(rightGameFrame, text="Solucionar", command=solucion,  bg="#9EE493", fg="#2F4858")
+solve_btn.pack(expand=False, fill=tk.BOTH, side=tk.BOTTOM, anchor=tk.S, padx=10, pady=10)
 
 
 '''
