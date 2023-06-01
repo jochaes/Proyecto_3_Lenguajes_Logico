@@ -13,6 +13,7 @@ I Semestre 2023
 '''
 
 import json
+from tkinter import filedialog as fd
 
 #Este código escribe en un archivo .pl los conocimientos de la sopa de letras
 
@@ -26,15 +27,18 @@ def storeKnowledge(list, fileName):
 #Funcion que abre un archivo json que contiene la matriz y la retorna
 def getInputDataFromJson(file_path, inputData):
     with open(file_path, 'r') as file:
-        data = json.load(file)
-        return data[inputData]
+        try:
+            data = json.load(file)
+            return data[inputData]
+        except:
+            print(f"No se encontro \"{inputData}\" el json")
+            return None
 
 
-
-
-# # Ejemplo de uso
+# Ejemplo de uso
 # matrixPath = './../DatosEntrada/matriz.json'
 # palabrasPath = './../DatosEntrada/palabras.json'
 
 # matrix = getInputDataFromJson(palabrasPath,"palabras")
 # print(matrix)
+
