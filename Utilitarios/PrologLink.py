@@ -18,12 +18,12 @@ I Semestre 2023
 
 from pyswip import Prolog
 
-def getCoord(coordStr):
+def obtenerCoordenadas(coordStr):
     coordStr = coordStr[1:]         #Quita la ',' de cada uno de los elementos de la lista
     coordTuple = eval(coordStr)     #Convierte el string a una tupla
     return coordTuple
 
-def wordPath(word):
+def consultarPalabra(word):
     prolog = Prolog()                                               #Crea el objeto prolog
     prolog.consult("./Prolog/FindWord.pl")                         #Carga el archivo BuscarPalabra.pl
 
@@ -32,7 +32,7 @@ def wordPath(word):
     path = []
     
     for result in (results[0])['Solutions']:
-        result = map(getCoord, result) #Convierte cada uno de los elementos de la lista en una tupla
+        result = map(obtenerCoordenadas, result) #Convierte cada uno de los elementos de la lista en una tupla
         path.append(list(dict.fromkeys(result))) #Convierte el resultado en una lista y elimina los elementos repetidos        
     return path
 

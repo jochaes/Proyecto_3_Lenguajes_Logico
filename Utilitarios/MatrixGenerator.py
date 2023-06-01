@@ -84,7 +84,7 @@ def llenar_espacios_vacios(sopa_letras):
 
 
 # Función para generar el conocimiento de la sopa de letras en Prolog
-def prologFactsGenerator(matrix, n):
+def generarHechosProlog(matrix, n):
     facts = []
     for row in range(n):
         for col in range(n):

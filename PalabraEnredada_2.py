@@ -6,13 +6,14 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 
-################################## Global Vars ##################################
-lbIndex = 0         #Listbox Index
-eventT = False      #Event trigger to change a word in the listbox
-MATRIX_SIZE = 12    #Matrix Size
-listWords = []
-################################## User Interface ##################################
+################################## Variables globales ##################################
+lbIndex = 0         #Indice del Listbox 
+eventT = False      #Flag para saber si se debe cambiar una palaba en el listbox
+MATRIX_SIZE = 12    #Tamaño de la matriz 
+listWords = []      #Lista de palabras ingresadas por el usuario
 
+################################## Interfaz de Usuario ##################################
+#*******-Panatalla Principal
 window = tk.Tk()
 window.title("Palabra Enredada")
 window.geometry("854x500")
@@ -21,30 +22,37 @@ window.geometry("854x500")
 # window.minsize(900, 675)
 window.config(bg="skyblue")
 
-################################## Functions ##################################
+################################## Funciones ##################################
 
-def loadGameFrame():
-    time.sleep(0.2)
+#Inicia el Frame de Juego 
+#En este caso el Frame de Juego es la vista que muestra:
+#  -la matriz de letras al usuario 
+#  - Lista de las palabras ingresadas
+#  - Boton para volver al Frame de Inicio
+#  - Boton para ejecutar las consulas a prolog y mostrar los resultados
+def cargarGameFrame():
+    time.sleep(0.2)  
     
     #Obtener la lista de palabras del usuario 
     global listWords 
     listWords = listbox.get(0, tk.END)
     
+    #Validar que se haya ingresado al menos una palabra
     if len(listWords) < 1:
         msg = "Debe ingresar al menos una palabra"
-        showMessage("Error", msg)
+        mostrarMensaje("Error", msg)
         return
     else:
         #Genera la matriz de letras
         matrix = generar_sopa_letras(MATRIX_SIZE, listWords)
 
         #Cargar la matriz en el frame
-        print ("\nCargando matriz en el frame")
+        print("\nCargando matriz en el frame")
         pintar_matriz(matrix, leftGameFrame)
 
         #Generar el conocimiento de prolog
         print ("\nGenerando conocimiento de prolog")
-        conocimiento = prologFactsGenerator(matrix, MATRIX_SIZE)
+        conocimiento = generarHechosProlog(matrix, MATRIX_SIZE)
         
         #Guardar el conocimiento en un archivo
         print ("\nGuardando conocimiento en archivo .pl")
@@ -59,26 +67,20 @@ def loadGameFrame():
         window.update_idletasks()
     
     
-    
-def loadStartFrame():
+#Inicia el Frame de Inicio
+def cargarStartFrame():
     time.sleep(0.2)
     gameFrame.pack_forget()  # Ocultar frame_b
     startFrame.pack(expand=True, fill=tk.BOTH)  # Mostrar frame_a
     window.update_idletasks()
     
     
-
-# def showMessage(title, message):
-#     #Colocar messagebox en el centro de la ventana
-#     msgbx = tk.messagebox.showinfo(title, message, parent=window)
-    
-def showMessage(title, message):
+#Muestra notificaciones al usuario
+def mostrarMensaje(title, message):
         self = window
         top = tk.Toplevel(self)
         top.details_expanded = False
         top.title(title)
-        #Store the size of the window in a string
-        
         
         top.geometry(f"{window.winfo_width()}x100+{'{}'}+{'{}'}".format(self.winfo_x(), self.winfo_y()))
         top.resizable(False, False)
@@ -95,14 +97,17 @@ def showMessage(title, message):
 
 ################################## Start Frame ##################################
 
-def addWordListBox(self, event=None):
+#*******- Funciones de Panatalla de Inicio de la Aplicacion
+
+#Verifica y añade las palabras ingresadas por el usuario al componente de ListBox
+def anadirPalabra(self, event=None):
     global lbIndex
     global eventT
     inputWord = entry.get()
 
     if len(inputWord) > MATRIX_SIZE:
         msg = f"La palabra no puede ser mayor a {MATRIX_SIZE} letras"
-        showMessage("Error", msg)
+        mostrarMensaje("Error", msg)
         return
 
     entry.delete(0, tk.END)
@@ -118,11 +123,10 @@ def addWordListBox(self, event=None):
             listbox.insert(tk.END, inputWord)
             print(inputWord)
 
-'''
-Cuando el Usuario selecciona una palabra de la lista, se activa el evento onselect
-para cargar la palabra en el Entry y poder cambiarla o eliminarla(Si borra toda la palabra).
-'''
-def onselect(evt):
+
+# Cuando el Usuario selecciona una palabra de la lista, se activa el evento onselect
+# para cargar la palabra en el Entry y poder cambiarla o eliminarla(Si borra toda la palabra).
+def onSelect(evt):
     global lbIndex
     global eventT
     w = evt.widget
@@ -134,7 +138,7 @@ def onselect(evt):
         entry.insert(0, value)
         print('You selected item %d: "%s"' % (lbIndex, value))
     
-
+#*******- Pantalla de Inicio de la Aplicacion
 #Ventana de Incio 
 startFrame = tk.Frame(window, bg="white")
 startFrame.pack(expand=True, fill=tk.BOTH)
@@ -153,7 +157,7 @@ inputWord_label.pack(padx=10, pady=5)
 entry = tk.Entry(startFrame,bg="white", fg="black")
 entry.pack(padx=10, pady=5) 
 #Cuando se presiona enter
-entry.bind("<Return>", addWordListBox)
+entry.bind("<Return>", anadirPalabra)
 
 #ListBox para mostrar las palabras ingresadas
 listFrame = tk.Frame(startFrame, bg="white")
@@ -165,30 +169,19 @@ listScroll.pack(padx=10, pady=5, side=tk.RIGHT, fill=tk.Y)
 listbox.pack(padx=10, pady=5, side=tk.LEFT, fill=tk.BOTH, expand=True) 
 # listScroll.grid(row=3, column=1, sticky=tk.N+tk.S)
 # listbox.grid(row=3, column=0, padx=10, pady=5)
-listbox.bind('<<ListboxSelect>>', onselect)
-
-#Hacer una lista con 10 palabras aleatorias e insertarlas en el listbox
-# palabras = ['hola', 'mundo', 'adios', 'ropa', 'casa','camion', 'perro', 'gato', 'pajaro', 'pescado']
-# for palabra in palabras:
-#     listbox.insert(tk.END, palabra)
+listbox.bind('<<ListboxSelect>>', onSelect)
 
 
 # Boton para cargar la ventana del juego
-button_a = tk.Button(startFrame, text="Iniciar Palabras Enredadas", command=loadGameFrame, bg="white", fg="black")
+button_a = tk.Button(startFrame, text="Iniciar Palabras Enredadas", command=cargarGameFrame, bg="white", fg="black")
 button_a.pack(padx=10, pady=5)
 # button_a.grid(row=4, column=0, padx=10, pady=5)
 
 
 
-
-
-################################## Game Frame ##################################
-################################## Game Frame ##################################
-################################## Game Frame ##################################
-################################## Game Frame ##################################
 ################################## Game Frame ##################################
 
-
+#*******- Pantalla del Juego
 
 gameFrame = tk.Frame(window, bg="lightblue")
 gameFrame.pack(expand=True, fill=tk.BOTH)
@@ -201,7 +194,7 @@ topGameFrame.pack(fill=tk.X, side=tk.TOP, anchor=tk.N)
 gameTitle3_Label = tk.Label(topGameFrame, text="Bienvenido a Palabra Enredada", font=("Arial", 20),bg="white", fg="black")
 gameTitle3_Label.pack(expand=True, fill=tk.Y, side=tk.RIGHT, anchor=tk.N)
 
-goBack_btn = tk.Button(topGameFrame, text="Mostrar Ventana A", command=loadStartFrame)
+goBack_btn = tk.Button(topGameFrame, text="Mostrar Ventana A", command=cargarStartFrame)
 goBack_btn.pack(expand=True, fill=tk.Y, side=tk.LEFT, anchor=tk.N)
 
 #Frame inferior
@@ -211,7 +204,6 @@ bottomGameFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, anchor=tk.N)
 #Frame izquierdo
 leftGameFrame = tk.Frame(bottomGameFrame, bg="yellow")
 leftGameFrame.pack(expand=False, fill=tk.BOTH, side=tk.LEFT, anchor=tk.N, padx=10, pady=10)
-
 
 #Frame derecho
 rightGameFrame = tk.Frame(bottomGameFrame, bg="pink")
@@ -227,6 +219,10 @@ gameListScroll.pack(side=tk.RIGHT, fill=tk.Y)
 gameListbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True) 
 
 
+#Funcion para cambiar el color de las etiquetas
+#Muestra la soucion en pantalla de las palabras encontradas por prolog
+#Pinta en Verde las palabras que sólo se encontraron una vez
+#Pinta en Fucsia las palabras que tienen más de una ruta 
 def cambiarColor(contenedor, resultados):
     
     #Si solo hay un camino lo pinta de verde, 
@@ -237,7 +233,7 @@ def cambiarColor(contenedor, resultados):
         color = "purple"
 
     for posiciones in resultados:
-        
+    
         for posicion in posiciones:
 
             x = posicion[0]
@@ -245,23 +241,21 @@ def cambiarColor(contenedor, resultados):
             etiqueta = contenedor.grid_slaves(row=x, column=y)[0]
             etiqueta.config(bg=color)
 
-   
-    
-
-
+#Funcion para consultar las palabras en prolog
 def solucion():
     print ("\nBuscando palabras en la matriz de letras")
     for palabra in listWords:
         print(palabra)
-        resultado = wordPath(palabra)
-        cambiarColor(leftGameFrame, resultado)
+        resultado = consultarPalabra(palabra)        #Consulta la Palabra en Prolog
+        cambiarColor(leftGameFrame, resultado)       #Cambiar el color de la respuesta que da prolog
         print(resultado)
         print("\n")
 
-
+#Boton para encontrar las palabras con prolos 
 solve_btn = tk.Button(rightGameFrame, text="Solucionar", command=solucion)
 solve_btn.pack(expand=False, fill=tk.BOTH, side=tk.BOTTOM, anchor=tk.S)
 
+#Dibuja la matriz generada por python 
 def pintar_matriz(matriz, contenedor):
     
     print(window.winfo_width())
@@ -310,6 +304,7 @@ for palabra in palabras:
 
 
 '''
+
 data = [
     ["k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "5", "6"],
     ["u", "v", "w", "x", "y", "z", "ñ", "á", "é", "í", "5", "6"],
@@ -327,7 +322,7 @@ data = [
 
 
 
-loadStartFrame()
+cargarStartFrame()
 
 # pintar_matriz(data, leftGameFrame)
 # cambiarColor(leftGameFrame, 0, 0, "red")
